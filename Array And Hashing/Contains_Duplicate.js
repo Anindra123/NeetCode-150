@@ -1,3 +1,10 @@
+//217. Contains Duplicate
+/*
+Given an integer array nums, return true if any value 
+appears at least twice in the array, 
+and return false if every element is distinct.
+*/
+
 //An efficient solution with O(n) runtime would be use of hashset
 let containsDuplicate = function (nums) {
   //Set() removes the duplicate elements and
