@@ -1,71 +1,59 @@
-var minWindow = function (s, t) {
-  const isMissingArgs = !s.length || !t.length;
-  if (isMissingArgs) return "";
-
-  const frequencyMap = getFrequencyMap(t);
-  const { start, end } = getWindowPointers(s, t, frequencyMap);
-
-  return getSubString(s, start, end);
-};
-
-const getFrequencyMap = (str, frequencyMap = new Map()) => {
-  for (const char of str) {
-    frequencyMap.set(char, (frequencyMap.get(char) || 0) + 1);
+const getSubstring = (s, start, end) => {
+  if (end <= s.length) {
+    return s.slice(start, start + end);
+  } else {
+    return "";
   }
-
-  return frequencyMap;
 };
+/**
+ * @param {string} s
+ * @param {string} t
+ * @return {string}
+ */
 
-const getWindowPointers = (s, t, frequencyMap) => {
-  let [left, right, matched, start, end] = [0, 0, 0, 0, s.length + 1];
-
-  while (right < s.length) {
-    matched = addRightFrequency(s, right, frequencyMap, matched);
-
-    const canSlide = () => matched === t.length;
-    while (canSlide()) {
-      const window = right - left + 1;
-
-      const isSmaller = window < end;
-      if (isSmaller) {
-        [start, end] = [left, window];
+var minWindow = function (s, t) {
+  let target = new Object(null);
+  let min = t.length + 1;
+  let l = 0;
+  let r = l;
+  let have = 0;
+  let need = t.length;
+  let start = 0;
+  let end = s.length + 1;
+  for (let i = 0; i < t.length; i++) {
+    if (target.hasOwnProperty(t[i])) {
+      target[t[i]]++;
+    } else {
+      target[t[i]] = 1;
+    }
+  }
+  while (r < s.length) {
+    if (target.hasOwnProperty(s[r])) {
+      target[s[r]]--;
+      if (0 <= target[s[r]]) {
+        have++;
       }
-
-      matched = subtractLeftFrequency(s, left, frequencyMap, matched);
-      left++;
     }
 
-    right++;
-  }
+    while (have === need) {
+      const window = r - l + 1;
+      if (window < end) {
+        [start, end] = [l, window];
+      }
+      if (target.hasOwnProperty(s[l])) {
+        if (target[s[l]] === 0) {
+          have--;
+        }
+        target[s[l]]++;
+      }
+      l++;
+    }
 
-  return { start, end };
+    r++;
+  }
+  return getSubstring(s, start, end);
 };
 
-const addRightFrequency = (s, right, frequencyMap, matched) => {
-  const char = s[right];
-
-  if (frequencyMap.has(char)) {
-    frequencyMap.set(char, frequencyMap.get(char) - 1);
-
-    const isInWindow = 0 <= frequencyMap.get(char);
-    if (isInWindow) matched++;
-  }
-
-  return matched;
-};
-
-const subtractLeftFrequency = (s, left, frequencyMap, matched) => {
-  const char = s[left];
-
-  if (frequencyMap.has(char)) {
-    const isOutOfWindow = frequencyMap.get(char) === 0;
-    if (isOutOfWindow) matched--;
-
-    frequencyMap.set(char, frequencyMap.get(char) + 1);
-  }
-
-  return matched;
-};
-
-const getSubString = (s, start, end) =>
-  end <= s.length ? s.slice(start, start + end) : "";
+const s = "ADOBECODEBANC",
+  t = "ABC";
+console.log(minWindow(s, t));
