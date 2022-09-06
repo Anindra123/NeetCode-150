@@ -38,6 +38,3 @@ var isValid = function (s) {
   //   if (stack.length === 0) return true;
   //   return false;
 };
-
-const s = "(())";
-console.log(isValid(s));
