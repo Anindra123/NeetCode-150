@@ -5,7 +5,7 @@
 
 //Basic brute force approach is to use backtracking and stack
 // the constraint is that the number of close parenthesis added will be less than
-// open
+// open parenthesis number
 var generateParenthesis = function (n) {
   const stack = [];
   const out = [];
