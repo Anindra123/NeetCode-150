@@ -3,6 +3,8 @@
  * @param {number} target
  * @return {number}
  */
+
+//basic binary search implementation time complexity O(logn)
 var search = function (nums, target) {
   return sort(0, nums.length - 1, target, nums);
 };
